@@ -1,0 +1,20 @@
+{% load static %}
+<!— templates/registration/login.html —>
+<html>
+<head>
+<title>Django blog</title>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400"
+rel="stylesheet">
+<link href="{% static 'css/nicepage.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/Главная.css' %}" media="screen">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" media="screen">
+</head>
+<body>
+<h2>Log In</h2>
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Log In</button>
+</form>
+</body>
+</html>

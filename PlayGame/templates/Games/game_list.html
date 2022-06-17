@@ -1,0 +1,142 @@
+{%load static%}
+
+
+<html lang="en">
+<head>
+    <style>
+        #filter {
+            display:inline-block;
+            padding-left: 10px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игры</title>
+</head>
+<body>
+<div class="header">
+    <h1>PlayGame</h1>
+
+</div>
+<div class="topnav">
+    <a href="">Главная</a>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'gameadd' %}">Добавить фильм</a>
+    {% endif %}
+    <a href="{% url 'gameadd' %}">Выйти</a>
+</div>
+
+
+
+<label class="custom-checkbox">
+<form action="{% url 'filter' %}" method="get">
+ <input name="GameName" type="text" placeholder="Поиск по названию">
+     <button type="submit">Поиск</button>
+</form>
+    <div id="filters">
+    <form action="{% url 'filter' %}" method="get">
+        <div id="filter">
+        {% for AgeRestriction in view.get_age %}
+            <div>
+                <input type="checkbox" name="Age" value="{{ AgeRestriction.id }}">
+                <span >{{ AgeRestriction.Age }}</span>
+            </div>
+        {% endfor %}
+        </div>
+        <div id="filter">
+        {% for Publisher in view.get_publisher %}
+            <div>
+                <input type="checkbox" name="Publisher" value="{{ Publisher.id }}">
+                <span >{{  Publisher.PublisherName }}</span>
+            </div>
+        {% endfor %}
+        </div>
+        <div id="filter">
+        {% for Category in view.get_category %}
+            <div>
+                <input type="checkbox" name="Category" value="{{ Category.id }}">
+                <span >{{ Category.CategoryName }}</span>
+            </div>
+        {% endfor %}
+        </div>
+        <div id="filter">
+        {% for Developer in view.get_developer %}
+            <div>
+                <input type="checkbox" name="Developer" value="{{ Developer.id }}">
+                <span >{{ Developer.DeveloperName }}</span>
+            </div>
+        {% endfor %}
+        </div>
+        <div id="filter">
+            {% for Country in view.get_countries %}
+                <div>
+                    <input type="checkbox" name="Country" value="{{ Country.id }}">
+                    <span >{{ Country.CountryName }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="filter">
+            {% for Localization in view.get_localization %}
+                <div>
+                    <input type="checkbox" name="Localization" value="{{ Localization.id }}">
+                    <span >{{ Localization.LocalizationName }}</span>
+                </div>
+            {% endfor %}
+        </div>
+     <button type="submit">Найти</button>
+     </form>
+    </div>
+</label>
+<h2>Каталог игр</h2>
+{% if game_list %}
+<table class="table">
+    <tr>
+        <th>Игра</th>
+        <th>Возрастное ограничение</th>
+        <th>Цена</th>
+        <th>Статус</th>
+        <th>Издатель</th>
+        <th>Категория</th>
+        <th>Разработчик</th>
+        {% if request.user.is_authenticated %}
+        <th>Редактировать/Удалить</th>
+        {% endif %}
+    </tr>
+    {% for el in game_list %}
+    <tr>
+        <td> {{ el.GameName }}</td>
+        <td> {{ el.AgeRestriction.Age}} </td>
+        <td> {{ el.Price }}</td>
+        <td> {{ el.StatusId.StatusName}} </td>
+        <td> {{ el.PublisherId.PublisherName}} </td>
+        <td>
+            {% for CategoryId in el.CategoryId.all %}
+                {{ CategoryId }}
+            {% endfor %}
+        </td>
+        <td>
+            {% for DeveloperId in el.DeveloperId.all %}
+                {{ DeveloperId }}
+            {% endfor %}
+       {% if request.user.is_authenticated %}
+{#        <td><a href="{% url 'GameAdd' el.pk %}">Обновить</a>#}
+{#            <a href="{% url 'GameAdd' el.pk %}">Удалить</a>#}
+        </td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>Игра не найдена.</p>
+{% endif %}
+
+
+
+
+</body>
+</html>
