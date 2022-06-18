@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    Еще игры от этого издателя:
+    <br>
+    {{ Publisher.PublisherName }}
+    {% for Games in view.get_publisher_games %}
+        <a href="{% url 'game' Games.pk %}">{{ Games.GameName }}</a>
+        <br>
+    {% endfor %}
+</body>
+</html>

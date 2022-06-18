@@ -1,8 +1,19 @@
+from django.contrib.auth import logout
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views import generic
 from .models import *
+from django.shortcuts import *
+
+
+class RolePermissonView():
+    def get_permission(self, **kwargs):
+        user = self.request.user
+        siteuser = SiteUser.objects.filter(user=user)
+        permission = Role.objects.filter(id=siteuser.values('RoleId')[0]['RoleId'])
+        return permission[0]
+
 
 class FilterView:
     def get_countries(self):
@@ -30,7 +41,7 @@ class FilterView:
 class SignupView(generic.CreateView):
     form_class = UserCreationForm
     template_name = 'signup.html'
-    success_url = reverse_lazy('confirm')
+    success_url = reverse_lazy('login')
 
 
 class SignupConfirm(generic.ListView):
@@ -41,28 +52,32 @@ class SignupConfirm(generic.ListView):
 class StartView(generic.View):
     template_name = ''
 
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('login')
+
 
 class LoginView(generic.View):
     template_name = ''
     model = User
 
 
-class MainView(FilterView, generic.ListView):
+class MainView(FilterView, generic.ListView, RolePermissonView):
     template_name = 'game_list.html'
     model = Game
 
 
-class GameView(generic.DetailView):
-    template_name = ''
+class GameView(generic.DetailView, RolePermissonView):
+    template_name = 'gameview.html'
     model = Game
 
 
-class CartView(generic.ListView):
+class CartView(generic.ListView, RolePermissonView):
     template_name = ''
 
 
-class GameAddView(FilterView, generic.CreateView):
-    template_name = 'game_list.html'
+class GameAddView(FilterView, generic.CreateView, RolePermissonView):
+    template_name = 'gameadd.html'
     model = Game
     fields = ['GameName', 'AgeRestriction', 'Price',
                   'StatusId', 'PublisherId', 'CategoryId', 'DeveloperId',
@@ -70,32 +85,40 @@ class GameAddView(FilterView, generic.CreateView):
     success_url = reverse_lazy('main')
 
 
-class GameUpdateView(generic.UpdateView):
-    template_name = ''
+class GameUpdateView(generic.UpdateView, RolePermissonView):
+    template_name = 'update.html'
     model = Game
+    fields = ['GameName', 'AgeRestriction', 'Price',
+              'StatusId', 'PublisherId', 'CategoryId', 'DeveloperId',
+              'CountryId', 'LocalizationId']
+    def get_success_url(self):
+        gameid = self.kwargs['pk']
+        return reverse_lazy('game', kwargs={'pk': gameid})
 
-
-class SuccessBuyView(generic.View):
+class SuccessBuyView(generic.View, RolePermissonView):
     template_name = ''
 
 
-class GameDeleteView(generic.DeleteView):
-    template_name = ''
+class GameDeleteView(generic.DeleteView, RolePermissonView):
     model = Game
+    def get_success_url(self):
+        return reverse_lazy('main')
 
 
-class PublisherPageView(generic.ListView):
+class PublisherPageView(generic.ListView, RolePermissonView):
+    template_name = 'publisherpage.html'
+    model = Publisher
+
+    def get_publisher_games(self):
+        publisherid = self.kwargs['pk']
+        return Game.objects.filter(PublisherId=publisherid)
+
+
+class DeveloperPageView(generic.ListView, RolePermissonView):
     template_name = ''
 
 
-class DeveloperPageView(generic.ListView):
-    template_name = ''
-
-
-
-
-
-class FilterGameView(FilterView, generic.ListView):
+class FilterGameView(FilterView, generic.ListView, RolePermissonView):
     def get_queryset(self):
         queryset = Game.objects.all()
         if self.request.GET.getlist("Developer"):

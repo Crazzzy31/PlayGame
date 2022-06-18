@@ -85,7 +85,7 @@ class Role(Model):
 
 class SiteUser(Model):
     user = OneToOneField(User, on_delete=CASCADE)
-    RoleId = ForeignKey(Role, on_delete=CASCADE, default=None, null=True)
+    RoleId = ForeignKey(Role, on_delete=CASCADE, default=3, null=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

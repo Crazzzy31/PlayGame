@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {{ game.GameName }}
+    <br>
+    Возрастное ограничение: {{ game.AgeRestricrion.Age }}
+    <br>
+    Цена: {{ game.Price }}
+    <br>
+    Статус продукта: {{ game.StatusId.StatusName }}
+    <br>
+    Издатель: <a href="{% url 'publisherpage' game.PublisherId.id %}">{{ game.PublisherId.PublisherName }}</a>
+    <br>
+    Разработчик: {% for DeveloperId in game.DeveloperId.all %}
+                        {{ DeveloperId }}
+                    {% endfor %}
+    <br>
+    Категория: {% for CategoryId in game.CategoryId.all %}
+                        {{ CategoryId }}
+                    {% endfor %}
+    <br>
+    Страна выпуска: {% for CountryId in game.CountryId.all %}
+                        {{ CountryId }}
+                    {% endfor %}
+    <br>
+    Переведено на: {% for LocalizationId in game.LocalizationId.all %}
+                        {{ LocalizationId }}
+                    {% endfor %}
+    <br>
+    Комментарии: {% for CommentId in game.CommentId.all %}
+                        {{ CommentId }}
+                    {% endfor %}
+    <br>
+    <a href="{% url 'gameupdate' game.pk %}">Редактировать</a>
+    <br>
+    <a href="{% url 'gamedelete' game.pk %}">Удалить</a>
+</body>
+</html>

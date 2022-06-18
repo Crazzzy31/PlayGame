@@ -23,11 +23,10 @@
 
 </div>
 <div class="topnav">
-    <a href="">Главная</a>
     {% if request.user.is_authenticated %}
-    <a href="{% url 'gameadd' %}">Добавить фильм</a>
+    <a href="{% url 'gameadd' %}">Добавить игру</a>
     {% endif %}
-    <a href="{% url 'gameadd' %}">Выйти</a>
+    <a href="{% url 'userlogout' %}">Выйти</a>
 </div>
 
 
@@ -89,6 +88,7 @@
         </div>
      <button type="submit">Найти</button>
      </form>
+        <a href="{% url 'main' %}"><button type="submit">Очистить фильтры</button></a>
     </div>
 </label>
 <h2>Каталог игр</h2>
@@ -102,13 +102,10 @@
         <th>Издатель</th>
         <th>Категория</th>
         <th>Разработчик</th>
-        {% if request.user.is_authenticated %}
-        <th>Редактировать/Удалить</th>
-        {% endif %}
     </tr>
     {% for el in game_list %}
     <tr>
-        <td> {{ el.GameName }}</td>
+        <td> <a href="{% url 'game' el.pk %}">{{ el.GameName }}</a></td>
         <td> {{ el.AgeRestriction.Age}} </td>
         <td> {{ el.Price }}</td>
         <td> {{ el.StatusId.StatusName}} </td>
@@ -123,8 +120,6 @@
                 {{ DeveloperId }}
             {% endfor %}
        {% if request.user.is_authenticated %}
-{#        <td><a href="{% url 'GameAdd' el.pk %}">Обновить</a>#}
-{#            <a href="{% url 'GameAdd' el.pk %}">Удалить</a>#}
         </td>
     {% endif %}
     </tr>
@@ -135,6 +130,13 @@
 <p>Игра не найдена.</p>
 {% endif %}
 
+{#{% if view.get_permission.RoleName == "Admin" %}#}
+{#    #}
+{#{% endif %}#}
+{##}
+{#{% if request.user.id == None %}#}
+{# #}
+{#{% endif %}#}
 
 
 
