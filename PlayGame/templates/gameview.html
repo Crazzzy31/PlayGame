@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ game.GameName }}</title>
 </head>
 <body>
     {{ game.GameName }}
@@ -31,12 +31,10 @@
                         {{ LocalizationId }}
                     {% endfor %}
     <br>
-    Комментарии: {% for CommentId in game.CommentId.all %}
-                        {{ CommentId }}
-                    {% endfor %}
-    <br>
     <a href="{% url 'gameupdate' game.pk %}">Редактировать</a>
     <br>
     <a href="{% url 'gamedelete' game.pk %}">Удалить</a>
+    <br>
+    <a href="{% url 'main' %}">Назад</a>
 </body>
 </html>
