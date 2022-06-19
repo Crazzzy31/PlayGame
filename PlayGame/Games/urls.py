@@ -18,5 +18,6 @@ urlpatterns = [
     path('PublisherPage/<int:pk>', PublisherPageView.as_view(), name="publisherpage"),
     path('DeveloperPage', DeveloperPageView.as_view, name="developerpage"),
     path('Filter', FilterGameView.as_view(), name='filter'),
-    path('UserLogout', user_logout, name='userlogout')
+    path('UserLogout', user_logout, name='userlogout'),
+    path('', StartView.as_view(), name='startview')
 ]

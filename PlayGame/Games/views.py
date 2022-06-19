@@ -46,15 +46,16 @@ class SignupView(generic.CreateView):
 
 class SignupConfirm(generic.ListView):
     model = Game
-    template_name = 'gang.html'
-
-
-class StartView(generic.View):
     template_name = ''
+
+
+class StartView(generic.TemplateView):
+    template_name = 'start.html'
+    model = Game
 
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect('login')
+    return HttpResponseRedirect('Start')
 
 
 class LoginView(generic.View):
@@ -112,6 +113,10 @@ class PublisherPageView(generic.ListView, RolePermissonView):
     def get_publisher_games(self):
         publisherid = self.kwargs['pk']
         return Game.objects.filter(PublisherId=publisherid)
+
+    def get_publisher_name(self):
+        publisherid = self.kwargs['pk']
+        return Publisher.objects.filter(Id=publisherid)
 
 
 class DeveloperPageView(generic.ListView, RolePermissonView):

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>От издателя</title>
 </head>
 <body>
     Еще игры от этого издателя:
@@ -12,5 +12,6 @@
         <a href="{% url 'game' Games.pk %}">{{ Games.GameName }}</a>
         <br>
     {% endfor %}
+    <a href="{% url 'main' %}">На  главную</a>
 </body>
 </html>
